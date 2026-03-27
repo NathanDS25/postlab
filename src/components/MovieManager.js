@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 // Movie images - matched to existing data
 const movieImageMap = {
@@ -65,11 +65,7 @@ const MovieManager = React.forwardRef((props, ref) => {
     }
   }));
 
-  useEffect(() => {
-    fetchMovies();
-  }, [filterRating]);
-
-  const fetchMovies = async () => {
+  const fetchMovies = useCallback(async () => {
     setLoading(true);
     try {
       const url = filterRating ? `/movies?rating=${filterRating}` : '/movies';
@@ -81,7 +77,11 @@ const MovieManager = React.forwardRef((props, ref) => {
       alert('Failed to fetch movies');
     }
     setLoading(false);
-  };
+  }, [filterRating]);
+
+  useEffect(() => {
+    fetchMovies();
+  }, [fetchMovies]);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -99,7 +99,7 @@ const MovieManager = React.forwardRef((props, ref) => {
     formDataUpload.append('poster', file);
 
     try {
-      const response = await fetch('http://localhost:5000/movies/upload', {
+      const response = await fetch('/movies/upload', {
         method: 'POST',
         body: formDataUpload,
       });
@@ -189,7 +189,7 @@ const MovieManager = React.forwardRef((props, ref) => {
       const response = await fetch(`/movies/${deletingMovieId}`, { method: 'DELETE' });
       if (response.ok) {
         console.log('Delete successful on server, updating state...');
-        setMovies(movies.filter(m => m.id != deletingMovieId));
+        setMovies(movies.filter(m => m.id !== deletingMovieId));
         setShowDeleteModal(false);
         setDeletingMovieId(null);
       } else {
@@ -215,11 +215,6 @@ const MovieManager = React.forwardRef((props, ref) => {
     'Romance': 'from-pink-600 to-rose-600',
   };
 
-  const getRatingColor = (rating) => {
-    if (rating >= 4) return 'text-green-400 bg-green-500/20';
-    if (rating >= 3) return 'text-yellow-400 bg-yellow-500/20';
-    return 'text-red-400 bg-red-500/20';
-  };
 
   return (
     <div className="w-full space-y-12">

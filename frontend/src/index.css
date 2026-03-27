@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: 240 7% 10%;
+  --bg-secondary: 240 7% 15%;
+  --bg-card: 240 7% 20%;
+  --bg-glass: 0 0% 100% / 0 0% 100% / 0.05;
+  
+  --text-primary: 0 0% 98%;
+  --text-secondary: 0 0% 70%;
+  
+  --accent: 45 100% 55%;
+  --accent-hover: 45 100% 65%;
+  --success: 151 76% 45%;
+  
+  --border: 240 7% 30%;
+  --shadow: 0 25px 50px -12px rgb(0 0% 0% / 0.25);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  @apply bg-[hsl(var(--bg-primary))] text-[hsl(var(--text-primary))] font-['Inter',sans-serif];
+  line-height: 1.6;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+}
+
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12;
+}
+
+/* Card base */
+.card {
+  @apply bg-[hsl(var(--bg-card))] backdrop-blur-md border border-[hsl(var(--border))] rounded-2xl shadow-[hsl(var(--shadow))] hover:shadow-lg transition-all duration-300 hover:border-[hsl(var(--accent)/0.2)];
+}
+
+/* Button base */
+.btn {
+  @apply font-semibold rounded-xl transition-all duration-300 border focus:outline-none focus:ring-4 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-primary {
+  @apply bg-[hsl(var(--accent))] hover:bg-[hsl(var(--accent-hover))] text-black border-[hsl(var(--accent))] shadow-lg hover:shadow-[hsl(var(--accent)/0.3)] focus:ring-[hsl(var(--accent)/0.3)];
+}
+
+.btn-secondary {
+  @apply bg-transparent hover:bg-white/10 border-white/20 text-white focus:ring-white/30;
+}
+
+/* Form */
+.form-input {
+  @apply w-full bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-[hsl(var(--accent)/0.3)] focus:ring-2 focus:ring-[hsl(var(--accent)/0.2)] transition-all;
+}
+
+.form-label {
+  @apply block font-semibold text-gray-200 mb-2 text-sm uppercase tracking-wide;
+}
+
+/* Glass effect */
+.glass {
+@apply bg-white/5 backdrop-blur-xl border-white/20;
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive grid */
+.grid-responsive {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 lg:gap-8;
+}
+

@@ -72,7 +72,7 @@ const MovieManager = React.forwardRef((props, ref) => {
   const fetchMovies = async () => {
     setLoading(true);
     try {
-      const url = filterRating ? `http://localhost:5000/movies?rating=${filterRating}` : 'http://localhost:5000/movies';
+      const url = filterRating ? `/movies?rating=${filterRating}` : '/movies';
       const response = await fetch(url);
       const data = await response.json();
       setMovies(data);
@@ -136,15 +136,15 @@ const MovieManager = React.forwardRef((props, ref) => {
       };
 
       if (editingId) {
-        const response = await fetch(`http://localhost:5000/movies/${editingId}`, {
+        const response = await fetch(`/movies/${editingId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(submitData)
         });
-        const updated = await response.json();
-        setMovies(movies.map(m => m.id === editingId ? updated : m));
+        const updatedMovie = await response.json();
+        setMovies(movies.map(m => m.id === editingId ? updatedMovie : m));
       } else {
-        const response = await fetch('http://localhost:5000/movies', {
+        const response = await fetch('/movies', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(submitData)
@@ -186,7 +186,7 @@ const MovieManager = React.forwardRef((props, ref) => {
     if (!deletingMovieId) return;
     try {
       console.log('Confirming delete for ID:', deletingMovieId);
-      const response = await fetch(`http://localhost:5000/movies/${deletingMovieId}`, { method: 'DELETE' });
+      const response = await fetch(`/movies/${deletingMovieId}`, { method: 'DELETE' });
       if (response.ok) {
         console.log('Delete successful on server, updating state...');
         setMovies(movies.filter(m => m.id != deletingMovieId));
@@ -490,6 +490,31 @@ const MovieManager = React.forwardRef((props, ref) => {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Active Filter Indicator */}
+      {(filterRating || searchTerm) && (
+        <div className="flex items-center justify-between bg-yellow-500/10 border border-yellow-500/20 rounded-[2rem] p-8 mb-12 animate-in slide-in-from-top-4 duration-500">
+          <div className="flex items-center gap-6">
+            <div className="w-16 h-16 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
+              <span className="text-3xl">🔍</span>
+            </div>
+            <div>
+              <h3 className="text-2xl font-black text-white tracking-tight">
+                {filterRating ? 'Trending Masterpieces' : 'Search Results'}
+              </h3>
+              <p className="text-slate-400">
+                {filterRating ? 'Showing only films with a perfect 5.0 rating' : `Searching for "${searchTerm}"`}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => { setFilterRating(''); setSearchTerm(''); }}
+            className="px-8 py-4 bg-yellow-500 text-slate-950 font-black rounded-xl hover:bg-yellow-400 transition-all shadow-lg shadow-yellow-500/10"
+          >
+            Show All Masterpieces
+          </button>
         </div>
       )}
 
